@@ -24,12 +24,36 @@ async function createTicket(ticket: CreateTicketsParams) {
   });
 }
 
+async function findTicketById(ticketId: number) {
+  return prisma.ticket.findFirst({
+    where: {
+      id: ticketId,
+    },
+    include: {
+      Enrollment: true,
+    },
+  });
+}
+
+async function findTicketByIdWithType(ticketId: number) {
+  return prisma.ticket.findFirst({
+    where: {
+      id: ticketId,
+    },
+    include: {
+      TicketType: true,
+    },
+  });
+}
+
 export type CreateTicketsParams = Omit<Ticket, 'id' | 'createdAt' | 'updatedAt'>;
 
 const ticketRepository = {
   findTicketTypes,
   findTicketByEnrollmentId,
   createTicket,
+  findTicketById,
+  findTicketByIdWithType,
 };
 
 export default ticketRepository;
