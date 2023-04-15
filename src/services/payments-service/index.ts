@@ -47,6 +47,8 @@ async function createPayment(ticketId: number, cardData: cardDataBodyType, userI
   };
   const payment = await paymentsRepository.createPayment(ticketId, paymentData);
 
+  await ticketRepository.updatePayment(ticketId);
+
   return payment;
 }
 
