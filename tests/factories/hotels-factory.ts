@@ -4,8 +4,8 @@ import { prisma } from '@/config';
 export async function createHotel() {
   return await prisma.hotel.create({
     data: {
-      image: faker.image.imageUrl(),
       name: faker.name.findName(),
+      image: faker.image.imageUrl(),
     },
   });
 }

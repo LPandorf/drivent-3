@@ -127,7 +127,7 @@ describe('GET /hotels', () => {
       ]);
     });
 
-    it('should respond with status 200 and a empty array when no hotel was found', async () => {
+    it('should respond with status 404 when no hotel was found', async () => {
       const user = await createUser();
       const token = await generateValidToken(user);
       const enrollment = await createEnrollmentWithAddress(user);
@@ -136,7 +136,7 @@ describe('GET /hotels', () => {
       const payment = await createPayment(ticket.id, ticketType.price);
       const response = await server.get('/hotels').set('Authorization', `Bearer ${token}`);
 
-      expect(response.status).toBe(httpStatus.OK);
+      expect(response.status).toBe(httpStatus.NOT_FOUND);
     });
   });
 });
@@ -263,6 +263,7 @@ describe('GET /hotels/:hotelId', () => {
       const payment = await createPayment(ticket.id, ticketType.price);
       const hotel = await createHotel();
       const room = await createHotelRoom(hotel.id);
+      console.log(hotel.id);
       const response = await server.get('/hotels/${hotel.id}').set('Authorization', `Bearer ${token}`);
 
       expect(response.status).toBe(httpStatus.OK);

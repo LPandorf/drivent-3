@@ -7,6 +7,10 @@ export async function getHotels(req: AuthenticatedRequest, res: Response) {
   try {
     const hotels = await hotelService.getHotelsByUserId();
 
+    if (hotels.length === 0) {
+      return res.sendStatus(httpStatus.NOT_FOUND);
+    }
+
     return res.status(httpStatus.OK).send(hotels);
   } catch (error) {
     if (error.name === 'NotFoundError') {
@@ -30,8 +34,7 @@ export async function getHotelRooms(req: AuthenticatedRequest, res: Response) {
     if (error.name === 'NotFoundError') {
       return res.sendStatus(httpStatus.NOT_FOUND);
     }
-    console.log(error);
-    console.log(hotelId, hotelIdNumber);
+
     return res.sendStatus(httpStatus.BAD_REQUEST);
   }
 }
