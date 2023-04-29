@@ -147,7 +147,10 @@ describe('POST /booking', () => {
       const anotherTicket = await createTicket(anotherEnrollment.id, anotherTicketType.id, TicketStatus.PAID);
       const anotherPayment = await createPayment(anotherTicket.id, anotherTicketType.price);
       const booking = await createBooking(anotherUser.id, room.id);
-      const response = await server.post('/booking').set('Authorization', `Bearer ${token}`);
+      for (let i = 0; i < 10; i++) {
+        await createBooking(anotherUser.id, room.id);
+      }
+      const response = await server.post('/booking').set('Authorization', `Bearer ${token}`).send({ roomId: room.id });
 
       expect(response.status).toBe(403);
     });
@@ -161,11 +164,10 @@ describe('POST /booking', () => {
       const payment = await createPayment(ticket.id, ticketType.price);
       const hotel = await createHotel();
       const room = await createHotelRoom(hotel.id);
-      const booking = await createBooking(user.id, room.id);
-      const response = await server.post('/booking').set('Authorization', `Bearer ${token}`);
+      const response = await server.post('/booking').set('Authorization', `Bearer ${token}`).send({ roomId: room.id });
 
       expect(response.status).toBe(200);
-      expect(response.body).toEqual({ id: booking.id });
+      expect(response.body).toEqual({ bookingId: expect.any(Number) });
     });
   });
 });

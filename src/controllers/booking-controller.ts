@@ -25,13 +25,12 @@ export async function makeAReservation(req: AuthenticatedRequest, res: Response)
 
   try {
     const booking = await bookingService.bookingByRoomId(userId, roomId);
-    console.log(booking);
+
     const body = {
       bookingId: booking.id,
     };
-    console.log(body);
-    console.log('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa');
-    return res.status(httpStatus.OK).send('olá');
+
+    return res.status(httpStatus.OK).send(body);
   } catch (error) {
     if (error.name === 'NotFoundError') {
       return res.sendStatus(httpStatus.NOT_FOUND);

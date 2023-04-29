@@ -19,9 +19,9 @@ async function bookingByRoomId(userId: number, roomId: number) {
     throw notFoundError();
   }
 
-  const roomIsAlreadyBooked = await bookingRepository.findBookingByRoomId(roomId);
+  const booked = await bookingRepository.findBookingByRoomId(roomId);
 
-  if (roomIsAlreadyBooked) {
+  if (roomExists.capacity <= booked.length) {
     throw forbiddenError();
   }
 
