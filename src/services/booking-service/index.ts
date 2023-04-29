@@ -25,9 +25,7 @@ async function bookingByRoomId(userId: number, roomId: number) {
     throw forbiddenError();
   }
 
-  const booking = await bookingRepository.bookThisRoom(userId, roomId);
-
-  return booking;
+  return bookingRepository.bookThisRoom({ userId, roomId });
 }
 
 async function changeBooking(userId: number, roomId: number) {
