@@ -9,8 +9,7 @@ export async function getBooking(req: AuthenticatedRequest, res: Response) {
   try {
     const booking = await bookingService.getBooking(userId);
 
-    // deve retornar { "id": bookingId, "Room":{}}
-    return res.status(httpStatus.OK).send(booking);
+    return res.status(httpStatus.OK).send({ id: booking.id, Room: booking.Room });
   } catch (error) {
     return res.sendStatus(httpStatus.NOT_FOUND);
   }
@@ -45,10 +44,16 @@ export async function changeAReservation(req: AuthenticatedRequest, res: Respons
     return res.sendStatus(httpStatus.BAD_REQUEST);
   }
 
-  try {
-    const bookingId = await bookingService.changeBooking(userId, roomId);
+  const bookingId = Number(req.params.bookingId);
 
-    return res.status(httpStatus.OK).send(bookingId);
+  if (!bookingId) {
+    return res.sendStatus(httpStatus.BAD_REQUEST);
+  }
+
+  try {
+    const booking = await bookingService.changeBooking(userId, Number(roomId));
+
+    return res.status(httpStatus.OK).send({ bookingId: booking.id });
   } catch (error) {
     if (error.name === 'notFoundError') {
       return res.sendStatus(httpStatus.NOT_FOUND);

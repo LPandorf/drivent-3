@@ -3,18 +3,25 @@ import { prisma } from '@/config';
 
 type updateParams = Omit<Booking, 'createdAt' | 'updatedAt'>;
 
-async function findBookingByUserIdWithRoom(userId: number) {
-  return prisma.booking.findMany({
+async function findBookingByUserId(userId: number) {
+  return prisma.booking.findFirst({
     where: { userId },
     include: {
-      Room: true,
+      Room: {
+        include: {
+          Hotel: true,
+        },
+      },
     },
   });
 }
 
 async function findBookingByRoomId(roomId: number) {
   return prisma.booking.findMany({
-    where: { id: roomId },
+    where: { roomId },
+    include: {
+      Room: true,
+    },
   });
 }
 
@@ -38,14 +45,7 @@ async function updateBooking({ userId, roomId, id }: updateParams) {
   });
 }
 
-async function findBookingByUserId(userId: number) {
-  return prisma.booking.findMany({
-    where: { userId },
-  });
-}
-
 const bookingRepository = {
-  findBookingByUserIdWithRoom,
   findBookingByRoomId,
   bookThisRoom,
   updateBooking,

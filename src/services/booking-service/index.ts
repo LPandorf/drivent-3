@@ -3,7 +3,7 @@ import bookingRepository from '@/repositories/booking-repository';
 import roomRepository from '@/repositories/room-repository';
 
 async function getBooking(userId: number) {
-  const booking = await bookingRepository.findBookingByUserIdWithRoom(userId);
+  const booking = await bookingRepository.findBookingByUserId(userId);
 
   if (!booking) {
     throw notFoundError();
@@ -37,19 +37,23 @@ async function changeBooking(userId: number, roomId: number) {
     throw notFoundError();
   }
 
-  const roomIsAlreadyBooked = await bookingRepository.findBookingByRoomId(roomId);
+  const booked = await bookingRepository.findBookingByRoomId(roomId);
 
-  if (roomIsAlreadyBooked) {
+  if (roomExists.capacity <= booked.length) {
     throw forbiddenError();
   }
 
   const booking = await bookingRepository.findBookingByUserId(userId);
 
+  if (!booking) {
+    throw forbiddenError();
+  }
+
   const id = booking.id;
 
   await bookingRepository.updateBooking({ userId, roomId, id });
 
-  return id;
+  return booking;
 }
 
 const bookingService = {

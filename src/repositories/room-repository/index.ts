@@ -1,7 +1,7 @@
 import { prisma } from '@/config';
 
 async function roomExists(roomId: number) {
-  return prisma.room.findMany({
+  return prisma.room.findFirst({
     where: { id: roomId },
   });
 }
