@@ -29,31 +29,12 @@ export async function makeAReservation(req: AuthenticatedRequest, res: Response)
     const enrollment = await enrollmentRepository.findWithAddressByUserId(userId);
 
     if (!enrollment) {
-      console.log('1');
       return res.sendStatus(httpStatus.FORBIDDEN);
     }
 
     const ticket = await ticketRepository.findTicketByEnrollmentId(enrollment.id);
 
-    /*if (!ticket || !ticket.TicketType.includesHotel || ticket.TicketType.isRemote || ticket.status === 'RESERVED') {
-      console.log("2");
-      return res.sendStatus(httpStatus.FORBIDDEN);
-    }*/
-
-    if (!ticket) {
-      console.log('2');
-      return res.sendStatus(httpStatus.FORBIDDEN);
-    }
-    if (!ticket.TicketType.includesHotel) {
-      console.log('3');
-      return res.sendStatus(httpStatus.FORBIDDEN);
-    }
-    if (ticket.TicketType.isRemote) {
-      console.log('4');
-      return res.sendStatus(httpStatus.FORBIDDEN);
-    }
-    if (ticket.status === 'RESERVED') {
-      console.log('5');
+    if (!ticket || !ticket.TicketType.includesHotel || ticket.TicketType.isRemote || ticket.status === 'RESERVED') {
       return res.sendStatus(httpStatus.FORBIDDEN);
     }
 
@@ -92,7 +73,7 @@ export async function changeAReservation(req: AuthenticatedRequest, res: Respons
 
     return res.status(httpStatus.OK).send({ bookingId: booking.id });
   } catch (error) {
-    if (error.name === 'notFoundError') {
+    if (error.name === 'NotFoundError') {
       return res.sendStatus(httpStatus.NOT_FOUND);
     }
 

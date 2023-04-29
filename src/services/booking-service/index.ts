@@ -14,16 +14,14 @@ async function getBooking(userId: number) {
 
 async function bookingByRoomId(userId: number, roomId: number) {
   const roomExists = await roomRepository.roomExists(roomId);
-  console.log('1');
+
   if (!roomExists) {
-    console.log('2');
     throw notFoundError();
   }
-  console.log('3');
+
   const booked = await bookingRepository.findBookingByRoomId(roomId);
 
   if (roomExists.capacity <= booked.length) {
-    console.log('4');
     throw forbiddenError();
   }
 
